@@ -620,6 +620,8 @@ namespace QuickFix
 
                 if (MsgType.LOGON.Equals(msgType))
                     NextLogon(message);
+                else if (MsgType.LOGOUT.Equals(msgType))
+                    ManejarLoginRechazado(message);
                 else if (!IsLoggedOn)
                     Disconnect(string.Format("Received msg type '{0}' when not logged on", msgType));
                 else if (MsgType.HEARTBEAT.Equals(msgType))
@@ -702,6 +704,12 @@ namespace QuickFix
             }
 
             Next();
+        }
+
+        private void ManejarLoginRechazado(Message message)
+        {
+            this.Application.FromAdmin(message, this.SessionID);
+            Disconnect(string.Format("Received msg type Logout when not logged on"));
         }
 
         protected void NextLogon(Message logon)
