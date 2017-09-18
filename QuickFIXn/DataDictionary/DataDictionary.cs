@@ -336,7 +336,7 @@ namespace QuickFix.DataDictionary
 		public void CheckValue(Fields.IField field)
 		{
 			DDField fld = FieldsByTag[ field.Tag ];
-			if( fld.HasEnums() )
+			if( fld.HasEnums() && !fld.AllowOtherValues )
 				if( fld.IsMultipleValueFieldWithEnums )
 				{
 					string [] splitted = field.ToString().Split( ' ' );
@@ -477,7 +477,12 @@ namespace QuickFix.DataDictionary
 			String tagstr = fldEl.Attributes["number"].Value;
 			String name = fldEl.Attributes["name"].Value;
 			String fldType = fldEl.Attributes["type"].Value;
-			int tag = QuickFix.Fields.Converters.IntConverter.Convert(tagstr);
+
+            var allowOtherValues = false;
+            if(fldEl.Attributes["allowOtherValues"] != null)
+                allowOtherValues = Convert.ToBoolean(fldEl.Attributes["allowOtherValues"].Value);
+
+            int tag = QuickFix.Fields.Converters.IntConverter.Convert(tagstr);
 			Dictionary<String, String> enums = new Dictionary<String, String>();
 			if (fldEl.HasChildNodes)
 			{
@@ -489,7 +494,7 @@ namespace QuickFix.DataDictionary
 					enums[enumEl.Attributes["enum"].Value] = description;
 				}
 			}
-			return new DDField(tag, name, enums, fldType);
+			return new DDField(tag, name, enums, fldType, allowOtherValues);
 		}
 
 		private void parseMessages(XmlDocument doc)

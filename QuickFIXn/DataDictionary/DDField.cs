@@ -14,13 +14,14 @@ namespace QuickFix.DataDictionary
         /// <param name="name"></param>
         /// <param name="enums">dictionary of enum=>description values</param>
         /// <param name="fixFldType"></param>
-        public DDField(int tag, String name, Dictionary<String, String> enums, String fixFldType)
+        public DDField(int tag, String name, Dictionary<String, String> enums, String fixFldType, bool allowOtherValues)
         {
             this.Tag = tag;
             this.Name = name;
             this.EnumDict = enums;
             this.FixFldType = fixFldType;
             this.FieldType = FieldTypeFromFix(this.FixFldType, out this._isMultipleValueFieldWithEnums);
+            AllowOtherValues = allowOtherValues;
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace QuickFix.DataDictionary
         /// </summary>
         [Obsolete("Use DDField(int,String,Dictionary<String,String>,string) instead")]
         public DDField(int tag, String name, HashSet<String> enums, String fixFldType)
-            : this(tag, name, HashSetToDict(enums), fixFldType)
+            : this(tag, name, HashSetToDict(enums), fixFldType, false)
         { }
 
         //TODO in version 2.0 - these probably shouldn't be public writable
@@ -49,6 +50,7 @@ namespace QuickFix.DataDictionary
         public Dictionary<String, String> EnumDict;
         public String FixFldType;
         public Type FieldType;
+        public bool AllowOtherValues;
 
         /// <summary>
         /// true if FIX field has an enum and if its type is one of: {MultipleValueString,MultipleStringValue,MultipleCharValue}

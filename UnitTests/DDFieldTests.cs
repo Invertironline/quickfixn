@@ -16,7 +16,7 @@ namespace UnitTests
             enums["a"] = "AAA";
             enums["b"] = "BBB";
 
-            DDField ddf = new DDField(5, "Foo", enums, "STRING");
+            DDField ddf = new DDField(5, "Foo", enums, "STRING", false);
 
             Assert.AreEqual(2, ddf.EnumDict.Count);
             Assert.AreEqual("AAA", ddf.EnumDict["a"]);
